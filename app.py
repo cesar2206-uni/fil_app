@@ -136,6 +136,10 @@ if end_index - start_index > max_subrange_length:
 k = 0
 l = 0
 m = 0
+inicio_bomba_extra = 0
+inicio_bomba = 0
+cierre_bomba = 0
+
 for i in range(len(fil_data["Time (min)"])):
 
   # Si es menor al caudal maximo, entonces tomaría el de entrada, si no se acumularia caudal, por lo tanto cambiaría
@@ -155,6 +159,7 @@ for i in range(len(fil_data["Time (min)"])):
 
   # Estamos en donde se va acumular el caudal, por lo tanto debemos tomar en cuenta que se va considerar 100 hasta que vuelva a 0 el caudal acumulado
 
+    
   else:
     
     if fil_data["q_almacenado_acc (l/s)"][i - 1] > 0 and l != 1:
