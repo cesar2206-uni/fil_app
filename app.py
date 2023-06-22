@@ -264,8 +264,8 @@ if bomba_extra:
                 "Caudal de escorrentia máximo de entrada (l/s)",
                 "Caudal total máximo de entrada (l/s)",
                 "Volumen máximo de la poza (m3)",
-                "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
-                "Tiempo de funcionamiento al máximo de la bomba 2 (h)"
+                "Tiempo de funcionamiento al máximo de la bomba 1 (min)",
+                "Tiempo de funcionamiento al máximo de la bomba 2 (min)"
             ],
             "Resultado": [
                 max(fil_data["q_es (l/s)"]),
@@ -284,7 +284,7 @@ else:
                 "Caudal de escorrentia máximo de entrada (l/s)",
                 "Caudal total máximo de entrada (l/s)",
                 "Volumen máximo de la poza (m3)",
-                "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
+                "Tiempo de funcionamiento al máximo de la bomba 1 (min)",
             ],
             "Resultado": [
                 max(fil_data["q_es (l/s)"]),
