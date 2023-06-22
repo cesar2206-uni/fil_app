@@ -156,19 +156,20 @@ for i in range(len(fil_data["Time (min)"])):
   # Estamos en donde se va acumular el caudal, por lo tanto debemos tomar en cuenta que se va considerar 100 hasta que vuelva a 0 el caudal acumulado
 
   else:
-    if fil_data["q_almacenado_acc (l/s)"][i - 1] > 0:
-      # Si el caudal de salida empieza a superar el de entrada entonces abririamos la bomba extra
-      if fil_data["q_salida (l/s)"][i - 1] > fil_data["q_entrada (l/s)"][i - 1]:
-        fil_data["q_salida (l/s)"][i] = q_max_b + q_max_b_extra
-        # Corregimos, ya que la bomba debe empezar, ni bien se llegue al máximo
-        if m == 0:
-          inicio_bomba_extra = fil_data["Time (min)"][i-1]
-          m = 1
-        fil_data["q_salida (l/s)"][i - 1] = q_max_b + q_max_b_extra
-        fil_data["q_almacenado_acc (l/s)"][i - 1] =  fil_data["q_entrada (l/s)"][i-1] - fil_data["q_salida (l/s)"][i-1] +  fil_data["q_almacenado_acc (l/s)"][i - 2]
-      else:
-        fil_data["q_salida (l/s)"][i] = q_max_b
-      fil_data["q_almacenado_acc (l/s)"][i] =  fil_data["q_entrada (l/s)"][i] - fil_data["q_salida (l/s)"][i] +  fil_data["q_almacenado_acc (l/s)"][i - 1]
+    if l != 1:
+        if fil_data["q_almacenado_acc (l/s)"][i - 1] > 0:
+        # Si el caudal de salida empieza a superar el de entrada entonces abririamos la bomba extra
+            if fil_data["q_salida (l/s)"][i - 1] > fil_data["q_entrada (l/s)"][i - 1]:
+                fil_data["q_salida (l/s)"][i] = q_max_b + q_max_b_extra
+            # Corregimos, ya que la bomba debe empezar, ni bien se llegue al máximo
+            if m == 0:
+                inicio_bomba_extra = fil_data["Time (min)"][i-1]
+                m = 1
+            fil_data["q_salida (l/s)"][i - 1] = q_max_b + q_max_b_extra
+            fil_data["q_almacenado_acc (l/s)"][i - 1] =  fil_data["q_entrada (l/s)"][i-1] - fil_data["q_salida (l/s)"][i-1] +  fil_data["q_almacenado_acc (l/s)"][i - 2]
+        else:
+            fil_data["q_salida (l/s)"][i] = q_max_b
+        fil_data["q_almacenado_acc (l/s)"][i] =  fil_data["q_entrada (l/s)"][i] - fil_data["q_salida (l/s)"][i] +  fil_data["q_almacenado_acc (l/s)"][i - 1]
 
   # Ahora la bomba para este punto en el cual es negativo, debe compensar para llegar a 0 entonces:
     else:
