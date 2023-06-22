@@ -257,21 +257,44 @@ hide_table_row_index = """
 # Inject CSS with Markdown
 st.markdown(hide_table_row_index, unsafe_allow_html=True)
 
-resultados = pd.DataFrame(
-    {
-        "Variable": [
-            "Caudal de escorrentia máximo de entrada (l/s)",
-            "Caudal total máximo de entrada (l/s)",
-            "Volumen máximo de la poza (m3)"
-        ],
-        "Resultado": [
-            max(fil_data["q_es (l/s)"]),
-            max(fil_data["q_entrada (l/s)"]),
-            V_dis
-        ]
-            
-    }
-)
+if bomba_extra:
+    resultados = pd.DataFrame(
+        {
+            "Variable": [
+                "Caudal de escorrentia máximo de entrada (l/s)",
+                "Caudal total máximo de entrada (l/s)",
+                "Volumen máximo de la poza (m3)",
+                "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
+                "Tiempo de funcionamiento al máximo de la bomba 2 (h)"
+            ],
+            "Resultado": [
+                max(fil_data["q_es (l/s)"]),
+                max(fil_data["q_entrada (l/s)"]),
+                V_dis,
+                cierre_bomba - inicio_bomba,
+                cierre_bomba - inicio_bomba_extra
+            ]
+                
+        }
+    ) 
+else:
+    resultados = pd.DataFrame(
+        {
+            "Variable": [
+                "Caudal de escorrentia máximo de entrada (l/s)",
+                "Caudal total máximo de entrada (l/s)",
+                "Volumen máximo de la poza (m3)",
+                "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
+            ],
+            "Resultado": [
+                max(fil_data["q_es (l/s)"]),
+                max(fil_data["q_entrada (l/s)"]),
+                V_dis,
+                cierre_bomba - inicio_bomba,
+            ]
+                
+        }
+    )
 
 st.table(resultados)
 
