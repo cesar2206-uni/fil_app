@@ -11,6 +11,34 @@ def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode('utf-8')
 
+st.markdown("# Balance de aguas")
+st.markdown("""
+            Para el diseño de Pozas, se  toma como caudal de entrada, la suma del caudal de escorrentía y el caudal de filtraciones.
+            
+            $$
+            Q_{entrada} = Q_{escorrentía}^* + Q_{filtraciones}
+            $$
+            
+            El caudal de escorrentia, incluirá el caudal de infiltración, para fines prácticos. Este debe de ser subido a la presente
+            página en el apartado izquierdo de "Datos de Entrada" como formato .xlsx y con colummas "Time (min)" y "q_es (l/s)", 
+            los cuales sería el tiempo y el caudal de escorrentia, respectivamente.
+            
+            $$
+            Q_{escorrentía}^* = Q_{escorrentía} + Q_{infiltración}
+            $$
+            
+            El caudal de filtraciones, será constante en todo el tiempo, y será colocado manualmente por el usuario en el menú lateral.
+            
+            El caudal de salida, estará definido según la capacidad máxima de la bomba. Una vez iniciada la lluvia, se estará
+            bombeando la misma cantidad que el caudal de entrada, posteriormente, si se llega al máximo de la capacidad de la bomba, se bombeará 
+            de forma constante a su máxima capacidad, acumulandose volumen. Una vez llegado al volumen máximo, se seguira bombeando a su máxima capacidad, 
+            hasta que no quede volumen acumulado en la presa. Si se requiere reducir el tiempo de funcionamiento al máximo de la bomba, se puede 
+            añadir otra bomba en el menú lateral.
+            
+            La descarga de la tabla de resultados, se encuentra al final.
+            
+            """)
+
 
 ##################
 # Sidebar Layout #
@@ -112,7 +140,7 @@ s_yz2 = st.sidebar.number_input(
 #########################
 # Procesamiento inicial #
 #########################
-st.markdown("# Resultados del diseño")
+
 # Iniciar columnas nuevas
 fil_data["q_f (l/s)"] = q_filt
 fil_data["q_entrada (l/s)"] = fil_data["q_es (l/s)"] + fil_data["q_f (l/s)"]
@@ -227,7 +255,6 @@ fil_data["V_almacenado"] = fil_data['Time (min)'].diff().fillna(0) * fil_data["q
 fil_data["Delta V_almacenado"] = abs(fil_data["V_almacenado"].diff().fillna(0))
 
 
-
 # Salida 1: Gráfico del Balance de la Poza
 fig = go.Figure()
 
@@ -303,14 +330,16 @@ if bomba_extra:
                 "Caudal total máximo de entrada (l/s)",
                 "Volumen máximo de la poza (m3)",
                 "Tiempo de funcionamiento al máximo de la bomba 1 (min)",
-                "Tiempo de funcionamiento al máximo de la bomba 2 (min)"
+                "Tiempo de funcionamiento al máximo de la bomba 2 (min)",
+                "Volumen de filtraciones (m3)"
             ],
             "Resultado": [
                 max(fil_data["q_es (l/s)"]),
                 max(fil_data["q_entrada (l/s)"]),
                 V_dis,
                 cierre_bomba - inicio_bomba,
-                cierre_bomba - inicio_bomba_extra
+                cierre_bomba - inicio_bomba_extra,
+                cierre_bomba * q_filt
             ]
                 
         }
@@ -323,12 +352,14 @@ else:
                 "Caudal total máximo de entrada (l/s)",
                 "Volumen máximo de la poza (m3)",
                 "Tiempo de funcionamiento al máximo de la bomba 1 (min)",
+                "Volumen de filtraciones (m3)"
             ],
             "Resultado": [
                 max(fil_data["q_es (l/s)"]),
                 max(fil_data["q_entrada (l/s)"]),
                 V_dis,
                 cierre_bomba - inicio_bomba,
+                cierre_bomba * q_filt
             ]
                 
         }
@@ -338,8 +369,12 @@ st.table(resultados)
 
 
 # Cálculo de los tirantes
-
-
+st.markdown("# Geometría de la Poza")
+st.markdown("""
+            La geometría de la poza será definida por el usuario en el menú lateral, pudiendo escoger entre una poza trapezoidal o una poza
+            rectangular (Pendientes = 0). El tirante es calculado a través del volumen máximo de la poza, anteriormente calculado en el 
+            balance de aguas. Se puede asimismo, observar el cambio del tirante a lo largo del evento de lluvia.
+            """)
 
 def vol_poza(x, b, h, s_xz1, s_xz2, s_yz1, s_yz2, option = 1, V_total = 0):
     
@@ -364,6 +399,7 @@ for i in range(len(fil_data["Time (min)"])):
 
 
 # Salida 2: Diseño de Sección de la Poza
+
 
 fig = make_subplots(
     rows=2, cols=2,
@@ -578,9 +614,7 @@ fig.update_layout(title='Tirante de la Poza a lo largo del tiempo',
 
 st.plotly_chart(fig, use_container_width=True)
 
-
-
-save_data = st.checkbox('Save the data results in .csv')
+save_data = st.checkbox('Haga click en el botón para poder descargar la tabla de resultados en .csv')
 if save_data:
     csv = convert_df(fil_data)
     st.download_button(
