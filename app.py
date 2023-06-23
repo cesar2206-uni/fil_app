@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from scipy.optimize import fsolve
+from scipy import interpolate
 
 @st.cache_data
 def convert_df(df):
@@ -49,6 +50,13 @@ if bomba_extra:
 else:
     q_max_b_extra = 0 
     
+suavizar = st.sidebar.checkbox('Suavizar la curva de escorrentia')
+
+if suavizar:
+    tck = interpolate.splrep(fil_data["Time (min)"] , fil_data["q_es (l/s)"] , s=0)
+    fil_data["q_es (l/s)"] = interpolate.splev(fil_data["Time (min)"], tck, der=0)
+    
+
 ## Geometria de la poza
 st.sidebar.markdown("# Geometría de la Poza")
 
@@ -139,7 +147,6 @@ if end_index - start_index > max_subrange_length:
     max_subrange_length = end_index - start_index
     max_start_index = start_index
     max_end_index = end_index
-
 # Balance de aguas
 
 k = 0
@@ -148,27 +155,29 @@ m = 0
 inicio_bomba_extra = 0
 inicio_bomba = 0
 cierre_bomba = 0
+cierre_bomba_predicho = False
+
 
 for i in range(len(fil_data["Time (min)"])):
-
   # Si es menor al caudal maximo, entonces tomaría el de entrada, si no se acumularia caudal, por lo tanto cambiaría
   if k == 0:
-    if fil_data["q_entrada (l/s)"][i] <= q_max_b:
+    if fil_data["q_entrada (l/s)"][i] <= q_max_b and i != max_start_index + 1:
       fil_data["q_salida (l/s)"][i] = fil_data["q_entrada (l/s)"][i]
       k = 0
+      
     else: 
-      fil_data["q_salida (l/s)"][i] = q_max_b
-      inicio_bomba = fil_data["Time (min)"][i]
-      if i == max_start_index:
-        k = 1
+        if i == max_start_index +1:
+            inicio_bomba = fil_data["Time (min)"][i]
+            fil_data["q_salida (l/s)"][i] = q_max_b 
+            k = 1
+        else:
+            fil_data["q_salida (l/s)"][i] = q_max_b        
 
     # Asimismo calculamos los acumulados
     if i != 0:
       fil_data["q_almacenado_acc (l/s)"][i] =  fil_data["q_entrada (l/s)"][i] - fil_data["q_salida (l/s)"][i] +  fil_data["q_almacenado_acc (l/s)"][i - 1]
 
   # Estamos en donde se va acumular el caudal, por lo tanto debemos tomar en cuenta que se va considerar 100 hasta que vuelva a 0 el caudal acumulado
-
-    
   else:
     
     if fil_data["q_almacenado_acc (l/s)"][i - 1] > 0 and l != 1:
@@ -203,8 +212,20 @@ for i in range(len(fil_data["Time (min)"])):
         fil_data["q_almacenado_acc (l/s)"][i] =  fil_data["q_entrada (l/s)"][i] - fil_data["q_salida (l/s)"][i] +  fil_data["q_almacenado_acc (l/s)"][i - 1]
 
 
+if cierre_bomba == 0:
+    caudal_faltante = fil_data["q_almacenado_acc (l/s)"].iloc[-1]
+    # Lo que continua del hidrograma lo consideramos como un constante (conservador)
+    caudal_saliente = q_max_b + q_max_b_extra - fil_data["q_entrada (l/s)"].iloc[-1]    
+    
+    tiempo_faltante = caudal_faltante / caudal_saliente
+
+    cierre_bomba_predicho = True
+    cierre_bomba = round(caudal_faltante / caudal_saliente + fil_data["Time (min)"].iloc[-1] - 1, 0) 
+    
+
 fil_data["V_almacenado"] = fil_data['Time (min)'].diff().fillna(0) * fil_data["q_almacenado_acc (l/s)"] * 60 / 1000
 fil_data["Delta V_almacenado"] = abs(fil_data["V_almacenado"].diff().fillna(0))
+
 
 
 # Salida 1: Gráfico del Balance de la Poza
@@ -236,11 +257,12 @@ if bomba_extra:
   )
  )
 
-fig.add_trace(go.Scatter(x = [cierre_bomba],
-                         y = [float(fil_data.loc[fil_data["Time (min)"] == cierre_bomba]["q_salida (l/s)"])],
-                         mode = "markers",
-                         name = "Cierre Bomba: "+ str(round(cierre_bomba, 2)) + " min"
-  ))
+if not cierre_bomba_predicho:
+    fig.add_trace(go.Scatter(x = [cierre_bomba],
+                            y = [float(fil_data.loc[fil_data["Time (min)"] == cierre_bomba]["q_salida (l/s)"])],
+                            mode = "markers",
+                            name = "Cierre Bomba: "+ str(round(cierre_bomba, 2)) + " min"
+    ))
 
 
 fig.update_layout(title='Diseño de Poza de Filtración - Balance de aguas',
@@ -538,7 +560,7 @@ fig.add_trace(go.Scatter(x = fil_data["Time (min)"],
                          mode = 'lines', showlegend=False,))
 
 fig.add_trace(go.Scatter(y = [max(fil_data["Tirante (m)"])],
-                         x = [float(fil_data.loc[fil_data["Tirante (m)"] == max(fil_data["Tirante (m)"])]["Time (min)"])],
+                         x = [fil_data.loc[fil_data["Tirante (m)"] == max(fil_data["Tirante (m)"])]["Time (min)"]],
                          mode = "markers",
                          name = "Tirante máximo = " + str(round(max(fil_data["Tirante (m)"]), 2) ) + " m"
   ))
