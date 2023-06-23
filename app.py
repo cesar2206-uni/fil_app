@@ -331,7 +331,7 @@ if bomba_extra:
                 "Volumen máximo de la poza (m3)",
                 "Tiempo de funcionamiento al máximo de la bomba 1 (min)",
                 "Tiempo de funcionamiento al máximo de la bomba 2 (min)",
-                "Volumen de filtraciones (m3)"
+                # "Volumen de filtraciones (m3)"
             ],
             "Resultado": [
                 max(fil_data["q_es (l/s)"]),
@@ -339,7 +339,7 @@ if bomba_extra:
                 V_dis,
                 cierre_bomba - inicio_bomba,
                 cierre_bomba - inicio_bomba_extra,
-                cierre_bomba * q_filt* 60 / 1000
+                # cierre_bomba * q_filt* 60 / 1000
             ]
                 
         }
@@ -352,14 +352,14 @@ else:
                 "Caudal total máximo de entrada (l/s)",
                 "Volumen máximo de la poza (m3)",
                 "Tiempo de funcionamiento al máximo de la bomba 1 (min)",
-                "Volumen de filtraciones (m3)"
+                # "Volumen de filtraciones (m3)"
             ],
             "Resultado": [
                 max(fil_data["q_es (l/s)"]),
                 max(fil_data["q_entrada (l/s)"]),
                 V_dis,
                 cierre_bomba - inicio_bomba,
-                cierre_bomba * q_filt* 60 / 1000
+                # cierre_bomba * q_filt* 60 / 1000
             ]
                 
         }
