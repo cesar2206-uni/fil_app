@@ -18,10 +18,18 @@ def convert_df(df):
 ## Caudales de entrada y bomba
 st.sidebar.markdown("# Datos de Entrada")
 
-uploaded_file = st.sidebar.file_uploader("Ingrese el archivo de caudales de entrada .xlsx:")
+uploaded_file = st.sidebar.file_uploader("Ingrese el archivo de caudales de escorrentia .xlsx:")
 
 if uploaded_file is not None:
     fil_data = pd.read_excel(uploaded_file)
+    
+q_filt = st.sidebar.number_input(
+    "Caudal de filtración (l/s)",
+    min_value = 0.00,
+    value = 30.0,
+    step = 1.0
+    )
+
     
 q_max_b = st.sidebar.number_input(
     "Caudal máximo - Bomba 1 (l/s)",
@@ -98,6 +106,7 @@ s_yz2 = st.sidebar.number_input(
 #########################
 st.markdown("# Resultados del diseño")
 # Iniciar columnas nuevas
+fil_data["q_f (l/s)"] = q_filt
 fil_data["q_entrada (l/s)"] = fil_data["q_es (l/s)"] + fil_data["q_f (l/s)"]
 fil_data["q_salida (l/s)"] = 0
 fil_data["q_almacenado_acc (l/s)"] = 0
@@ -203,6 +212,8 @@ fig = go.Figure()
 
 
 fig.add_trace(go.Scatter(x = fil_data["Time (min)"], y = fil_data["q_entrada (l/s)"], mode = 'lines', name = "Caudal de Entrada"))
+
+fig.add_trace(go.Scatter(x = fil_data["Time (min)"], y = fil_data["q_f (l/s)"], mode = 'lines', name = "Caudal de Filtración"))
 
 fig.add_trace(go.Scatter(x = fil_data["Time (min)"],
                                 y = fil_data["q_salida (l/s)"],
