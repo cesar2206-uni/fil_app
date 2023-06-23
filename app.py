@@ -339,7 +339,7 @@ if bomba_extra:
                 V_dis,
                 cierre_bomba - inicio_bomba,
                 cierre_bomba - inicio_bomba_extra,
-                cierre_bomba * q_filt
+                cierre_bomba * q_filt* 60 / 1000
             ]
                 
         }
@@ -359,7 +359,7 @@ else:
                 max(fil_data["q_entrada (l/s)"]),
                 V_dis,
                 cierre_bomba - inicio_bomba,
-                cierre_bomba * q_filt
+                cierre_bomba * q_filt* 60 / 1000
             ]
                 
         }
