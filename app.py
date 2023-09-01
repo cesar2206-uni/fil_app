@@ -326,19 +326,17 @@ if bomba_extra:
     resultados = pd.DataFrame(
         {
             "Variable": [
-                "Caudal de escorrentia máximo de entrada (l/s)",
-                "Caudal total máximo de entrada (l/s)",
-                "Volumen máximo de la poza (m3)",
-                "Tiempo de funcionamiento al máximo de la bomba 1 (min)",
-                "Tiempo de funcionamiento al máximo de la bomba 2 (min)",
+                "Caudal total máximo de entrada (m3/s)",
+                "Volumen máximo almacenado de la poza (m3)",
+                "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
+                "Tiempo de funcionamiento al máximo de la bomba 2 (h)",
                 # "Volumen de filtraciones (m3)"
             ],
             "Resultado": [
-                max(fil_data["q_es (l/s)"]),
-                max(fil_data["q_entrada (l/s)"]),
+                max(fil_data["q_entrada (l/s)"]) * 0.001,
                 V_dis,
-                cierre_bomba - inicio_bomba,
-                cierre_bomba - inicio_bomba_extra,
+                cierre_bomba - inicio_bomba / 60,
+                cierre_bomba - inicio_bomba_extra / 60,
                 # cierre_bomba * q_filt* 60 / 1000
             ]
                 
@@ -348,17 +346,15 @@ else:
     resultados = pd.DataFrame(
         {
             "Variable": [
-                "Caudal de escorrentia máximo de entrada (l/s)",
-                "Caudal total máximo de entrada (l/s)",
-                "Volumen máximo de la poza (m3)",
-                "Tiempo de funcionamiento al máximo de la bomba 1 (min)",
+                "Caudal total máximo de entrada (m3/s)",
+                "Volumen máximo almacenado de la poza (m3)",
+                "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
                 # "Volumen de filtraciones (m3)"
             ],
             "Resultado": [
-                max(fil_data["q_es (l/s)"]),
-                max(fil_data["q_entrada (l/s)"]),
+                max(fil_data["q_entrada (l/s)"]) * 0.001,
                 V_dis,
-                cierre_bomba - inicio_bomba,
+                cierre_bomba - inicio_bomba / 60,
                 # cierre_bomba * q_filt* 60 / 1000
             ]
                 
