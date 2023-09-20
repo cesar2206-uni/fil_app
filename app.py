@@ -333,10 +333,10 @@ if bomba_extra:
                 # "Volumen de filtraciones (m3)"
             ],
             "Resultado": [
-                max(fil_data["q_entrada (l/s)"]) * 0.001,
-                V_dis,
-                (cierre_bomba - inicio_bomba) / 60,
-                (cierre_bomba - inicio_bomba_extra) / 60,
+                f"{round(max(fil_data["q_entrada (l/s)"]) * 0.001, 2):.2f}",
+                f"{round(V_dis, 2):.2f}",
+                f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
+                f"{round((cierre_bomba - inicio_bomba_extra) / 60, 1):.1f}",
                 # cierre_bomba * q_filt* 60 / 1000
             ]
                 
@@ -352,9 +352,9 @@ else:
                 # "Volumen de filtraciones (m3)"
             ],
             "Resultado": [
-                max(fil_data["q_entrada (l/s)"]) * 0.001,
-                V_dis,
-                (cierre_bomba - inicio_bomba) / 60,
+                f"{round(max(fil_data["q_entrada (l/s)"]) * 0.001, 2):.2f}",
+                f"{round(V_dis, 2):.2f}",
+                f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
                 # cierre_bomba * q_filt* 60 / 1000
             ]
                 
