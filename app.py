@@ -281,7 +281,7 @@ if bomba_extra:
                 # "Volumen de filtraciones (m3)"
             ],
             "Resultado": [
-                f"{round(max(fil_data["q_entrada (l/s)"]) * 0.001, 2):.2f}",
+                f"{round(max(fil_data['q_entrada (l/s)']) * 0.001, 2):.2f}",
                 "{:.2f}".format(round(max(fil_data["q_entrada (l/s)"]) * 0.001, 2)),
                 f"{round(V_dis, 2):.2f}",
                 f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
