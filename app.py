@@ -84,6 +84,22 @@ if suavizar:
     tck = interpolate.splrep(fil_data["Time (min)"] , fil_data["q_es (l/s)"] , s=0)
     fil_data["q_es (l/s)"] = interpolate.splev(fil_data["Time (min)"], tck, der=0)
     
+cotas = st.sidebar.checkbox('Añadir Cotas de la Poza')
+
+if cotas:
+    cota_fondo = st.sidebar.number_input(
+    "Nivel de fondo de la poza (m)",
+    min_value = 0.0,
+    value = 4000.0,
+    step = 1.0
+    )
+    
+    cota_max_operacion = st.sidebar.number_input(
+    "Nivel máximo de operación (m)",
+    min_value = 0.0,
+    value = 4000.0,
+    step = 1.0
+    )
 
 ## Geometria de la poza
 st.sidebar.markdown("# Geometría de la Poza")
@@ -322,44 +338,98 @@ hide_table_row_index = """
 # Inject CSS with Markdown
 st.markdown(hide_table_row_index, unsafe_allow_html=True)
 
-if bomba_extra:
-    resultados = pd.DataFrame(
-        {
-            "Variable": [
-                "Caudal total máximo de entrada (m3/s)",
-                "Volumen máximo almacenado de la poza (m3)",
-                "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
-                "Tiempo de funcionamiento al máximo de la bomba 2 (h)",
-                # "Volumen de filtraciones (m3)"
-            ],
-            "Resultado": [
-                "{:.2f}".format(round(max(fil_data["q_entrada (l/s)"]) * 0.001, 2)),
-                f"{round(V_dis, 2):.2f}",
-                f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
-                f"{round((cierre_bomba - inicio_bomba_extra) / 60, 1):.1f}",
-                # cierre_bomba * q_filt* 60 / 1000
-            ]
-                
-        }
-    ) 
+
+if cotas:
+    if bomba_extra:
+        resultados = pd.DataFrame(
+            {
+                "Variable": [
+                    "Caudal total máximo de entrada (m3/s)",
+                    "Volumen máximo almacenado de la poza (m3)",
+                    "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
+                    "Tiempo de funcionamiento al máximo de la bomba 2 (h)",
+                    "Cota de fondo (m.s.n.m)",
+                    "Altura del agua (m)",
+                    "Nivel Máximo de Operación (m.s.n.m)",
+                    "Nivel Alcanzado durante el Evento (m.s.n.m)"
+                ],
+                "Resultado": [
+                    "{:.2f}".format(round(max(fil_data["q_entrada (l/s)"]) * 0.001, 2)),
+                    f"{round(V_dis, 2):.2f}",
+                    f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
+                    f"{round((cierre_bomba - inicio_bomba_extra) / 60, 1):.1f}",
+                    f"{round(cota_fondo, 1):.1f}",
+                    f"{round(max(fil_data["Tirante (m)"]), 1):.1f}",
+                    f"{round(cota_max_operacion, 1):.1f}",
+                    f"{round(max(fil_data["Tirante (m)"]) + cota_fondo, 1):.1f}"
+                ]
+            }
+        ) 
+    else:
+        resultados = pd.DataFrame(
+            {
+                "Variable": [
+                    "Caudal total máximo de entrada (m3/s)",
+                    "Volumen máximo almacenado de la poza (m3)",
+                    "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
+                    "Cota de fondo (m.s.n.m)",
+                    "Altura del agua (m)",
+                    "Nivel Máximo de Operación (m.s.n.m)",
+                    "Nivel Alcanzado durante el Evento (m.s.n.m)"
+                ],
+                "Resultado": [
+                    "{:.2f}".format(round(max(fil_data["q_entrada (l/s)"]) * 0.001, 2)),
+                    f"{round(V_dis, 2):.2f}",
+                    f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
+                    f"{round(cota_fondo, 1):.1f}",
+                    f"{round(max(fil_data["Tirante (m)"]), 1):.1f}",
+                    f"{round(cota_max_operacion, 1):.1f}",
+                    f"{round(max(fil_data["Tirante (m)"]) + cota_fondo, 1):.1f}"
+                ]
+                    
+            }
+        )
 else:
-    resultados = pd.DataFrame(
-        {
-            "Variable": [
-                "Caudal total máximo de entrada (m3/s)",
-                "Volumen máximo almacenado de la poza (m3)",
-                "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
-                # "Volumen de filtraciones (m3)"
-            ],
-            "Resultado": [
-                "{:.2f}".format(round(max(fil_data["q_entrada (l/s)"]) * 0.001, 2)),
-                f"{round(V_dis, 2):.2f}",
-                f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
-                # cierre_bomba * q_filt* 60 / 1000
-            ]
-                
-        }
-    )
+    if bomba_extra:
+        resultados = pd.DataFrame(
+            {
+                "Variable": [
+                    "Caudal total máximo de entrada (m3/s)",
+                    "Volumen máximo almacenado de la poza (m3)",
+                    "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
+                    "Tiempo de funcionamiento al máximo de la bomba 2 (h)",
+                    # "Volumen de filtraciones (m3)"
+                ],
+                "Resultado": [
+                    "{:.2f}".format(round(max(fil_data["q_entrada (l/s)"]) * 0.001, 2)),
+                    f"{round(V_dis, 2):.2f}",
+                    f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
+                    f"{round((cierre_bomba - inicio_bomba_extra) / 60, 1):.1f}",
+                    # cierre_bomba * q_filt* 60 / 1000
+                ]
+                    
+            }
+        ) 
+    else:
+        resultados = pd.DataFrame(
+            {
+                "Variable": [
+                    "Caudal total máximo de entrada (m3/s)",
+                    "Volumen máximo almacenado de la poza (m3)",
+                    "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
+                    # "Volumen de filtraciones (m3)"
+                ],
+                "Resultado": [
+                    "{:.2f}".format(round(max(fil_data["q_entrada (l/s)"]) * 0.001, 2)),
+                    f"{round(V_dis, 2):.2f}",
+                    f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
+                    # cierre_bomba * q_filt* 60 / 1000
+                ]
+                    
+            }
+        )
+
+
 
 st.table(resultados)
 
