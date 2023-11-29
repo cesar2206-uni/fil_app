@@ -350,20 +350,20 @@ if cotas:
                     "Volumen máximo almacenado de la poza (m3)",
                     "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
                     "Tiempo de funcionamiento al máximo de la bomba 2 (h)",
-                    "Cota de fondo (m.s.n.m)",
-                    "Altura del agua (m)",
-                    "Nivel Máximo de Operación (m.s.n.m)",
-                    "Nivel Alcanzado durante el Evento (m.s.n.m)"
+                  #  "Cota de fondo (m.s.n.m)",
+                   # "Altura del agua (m)",
+                    #"Nivel Máximo de Operación (m.s.n.m)",
+                    #"Nivel Alcanzado durante el Evento (m.s.n.m)"
                 ],
                 "Resultado": [
                     "{:.2f}".format(round(max(fil_data["q_entrada (l/s)"]) * 0.001, 2)),
                     f"{round(V_dis, 2):.2f}",
                     f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
                     f"{round((cierre_bomba - inicio_bomba_extra) / 60, 1):.1f}",
-                    f"{round(cota_fondo, 1):.1f}",
-                    "{:.1f}".format(round(max(fil_data["Tirante (m)"]), 1)),
-                    f"{round(cota_max_operacion, 1):.1f}",
-                    "{:.1f}".format(round(max(fil_data["Tirante (m)"]) + cota_fondo, 1))
+                    #f"{round(cota_fondo, 1):.1f}",
+                    #"{:.1f}".format(round(max(fil_data["Tirante (m)"]), 1)),
+                    #f"{round(cota_max_operacion, 1):.1f}",
+                    #"{:.1f}".format(round(max(fil_data["Tirante (m)"]) + cota_fondo, 1))
                 ]
             }
         ) 
@@ -374,19 +374,19 @@ if cotas:
                     "Caudal total máximo de entrada (m3/s)",
                     "Volumen máximo almacenado de la poza (m3)",
                     "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
-                    "Cota de fondo (m.s.n.m)",
-                    "Altura del agua (m)",
-                    "Nivel Máximo de Operación (m.s.n.m)",
-                    "Nivel Alcanzado durante el Evento (m.s.n.m)"
+                    #"Cota de fondo (m.s.n.m)",
+                    #"Altura del agua (m)",
+                    #"Nivel Máximo de Operación (m.s.n.m)",
+                    #"Nivel Alcanzado durante el Evento (m.s.n.m)"
                 ],
                 "Resultado": [
                     "{:.2f}".format(round(max(fil_data["q_entrada (l/s)"]) * 0.001, 2)),
                     f"{round(V_dis, 2):.2f}",
                     f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
-                    f"{round(cota_fondo, 1):.1f}",
-                    "{:.1f}".format(round(max(fil_data["Tirante (m)"]), 1)),
-                    f"{round(cota_max_operacion, 1):.1f}",
-                    "{:.1f}".format(round(max(fil_data["Tirante (m)"]) + cota_fondo, 1))
+                  #  f"{round(cota_fondo, 1):.1f}",
+                  #  "{:.1f}".format(round(max(fil_data["Tirante (m)"]), 1)),
+                  #  f"{round(cota_max_operacion, 1):.1f}",
+                  #  "{:.1f}".format(round(max(fil_data["Tirante (m)"]) + cota_fondo, 1))
                 ]
                     
             }
