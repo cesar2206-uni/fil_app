@@ -309,7 +309,7 @@ if cotas:
                     f"{round((cierre_bomba - inicio_bomba_extra) / 60, 1):.1f}",
                     # cierre_bomba * q_filt* 60 / 1000
                     f"{round(cota_fondo, 1):.1f}",
-                    f"{round(max(fil_data['Tirante (m)']), 1):.1f}"
+                    f"{round(max(fil_data['q_entrada (l/s)']), 1):.1f}"
                 ]        
             }
         )
