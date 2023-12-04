@@ -308,7 +308,7 @@ if cotas:
                     f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
                     f"{round((cierre_bomba - inicio_bomba_extra) / 60, 1):.1f}",
                     f"{round(cota_fondo, 1):.1f}",
-                    "{:.1f}".format(round(max(fil_data['Tirante (m)']), 1)),
+                    "{:.1f}".format(round(fil_data['Tirante (m)'].max(), 1)),
                     #f"{round(max(fil_data['Tirante (m)']), 1):.1f}",
                     f"{round(cota_max_operacion, 1):.1f}",
                     f"{round(max(fil_data['Tirante (m)']) + cota_fondo, 1):.1f}"
