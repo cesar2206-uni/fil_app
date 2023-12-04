@@ -298,6 +298,8 @@ if cotas:
                     "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
                     "Tiempo de funcionamiento al máximo de la bomba 2 (h)",
                     # "Volumen de filtraciones (m3)"
+                    "Cota de fondo (m.s.n.m)",
+                    "Altura del agua (m)"
                 ],
                 "Resultado": [
                     f"{round(max(fil_data['q_entrada (l/s)']) * 0.001, 2):.2f}",
@@ -306,6 +308,8 @@ if cotas:
                     f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
                     f"{round((cierre_bomba - inicio_bomba_extra) / 60, 1):.1f}",
                     # cierre_bomba * q_filt* 60 / 1000
+                    f"{round(cota_fondo, 1):.1f}",
+                    f"{round(max(fil_data['Tirante (m)']), 1):.1f}"
                 ]        
             }
         )
