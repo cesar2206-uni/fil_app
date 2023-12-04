@@ -236,6 +236,21 @@ if cierre_bomba == 0:
     
 fil_data["V_almacenado"] = fil_data['Time (min)'].diff().fillna(0) * fil_data["q_almacenado_acc (l/s)"] * 60 / 1000
 fil_data["Delta V_almacenado"] = abs(fil_data["V_almacenado"].diff().fillna(0))
+
+def vol_poza(x, b, h, s_xz1, s_xz2, s_yz1, s_yz2, option = 1, V_total = 0):
+  A_1 = b * h
+  A_2 = (b + s_xz1 * x + s_xz2 * x) * (h + s_yz1 * x + s_yz2 * x)
+  V_poza = (x / 3) * (A_1 + A_2 + ((A_1 * A_2) ** 0.5))
+  if option == 1:
+    return V_poza
+  elif option == 0:
+    return V_total - V_poza
+vol_poza_completa = vol_poza(z, b, h, s_xz1, s_xz2, s_yz1, s_yz2)
+y = fsolve(vol_poza, x0=1, args=(b, h, s_xz1, s_xz2, s_yz1, s_yz2, 0, V_dis,))[0]
+fil_data["Tirante (m)"] = 0
+for i in range(len(fil_data["Time (min)"])):
+  fil_data["Tirante (m)"][i] = fsolve(vol_poza, x0=1, args=(b, h, s_xz1, s_xz2, s_yz1, s_yz2, 0, float(fil_data["V_almacenado"][i]),))[0]
+
 # Salida 1: Gráfico del Balance de la Poza
 fig = go.Figure()
 fig.add_trace(go.Scatter(x = fil_data["Time (min)"], y = fil_data["q_entrada (l/s)"], mode = 'lines', name = "Caudal de Entrada"))
@@ -384,20 +399,7 @@ st.markdown("""
             rectangular (Pendientes = 0). El tirante es calculado a través del volumen máximo de la poza, anteriormente calculado en el 
             balance de aguas. Se puede asimismo, observar el cambio del tirante a lo largo del evento de lluvia.
             """)
-def vol_poza(x, b, h, s_xz1, s_xz2, s_yz1, s_yz2, option = 1, V_total = 0):
-    
-  A_1 = b * h
-  A_2 = (b + s_xz1 * x + s_xz2 * x) * (h + s_yz1 * x + s_yz2 * x)
-  V_poza = (x / 3) * (A_1 + A_2 + ((A_1 * A_2) ** 0.5))
-  if option == 1:
-    return V_poza
-  elif option == 0:
-    return V_total - V_poza
-vol_poza_completa = vol_poza(z, b, h, s_xz1, s_xz2, s_yz1, s_yz2)
-y = fsolve(vol_poza, x0=1, args=(b, h, s_xz1, s_xz2, s_yz1, s_yz2, 0, V_dis,))[0]
-fil_data["Tirante (m)"] = 0
-for i in range(len(fil_data["Time (min)"])):
-  fil_data["Tirante (m)"][i] = fsolve(vol_poza, x0=1, args=(b, h, s_xz1, s_xz2, s_yz1, s_yz2, 0, float(fil_data["V_almacenado"][i]),))[0]
+
 # Salida 2: Diseño de Sección de la Poza
 fig = make_subplots(
     rows=2, cols=2,
