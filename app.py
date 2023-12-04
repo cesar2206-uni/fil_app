@@ -236,6 +236,7 @@ if cierre_bomba == 0:
     
 fil_data["V_almacenado"] = fil_data['Time (min)'].diff().fillna(0) * fil_data["q_almacenado_acc (l/s)"] * 60 / 1000
 fil_data["Delta V_almacenado"] = abs(fil_data["V_almacenado"].diff().fillna(0))
+V_dis = max(fil_data["V_almacenado"])
 
 def vol_poza(x, b, h, s_xz1, s_xz2, s_yz1, s_yz2, option = 1, V_total = 0):
   A_1 = b * h
@@ -292,7 +293,7 @@ with tab1:
     st.plotly_chart(fig, use_container_width=True)
 with tab2:
     st.write(fil_data)
-V_dis = max(fil_data["V_almacenado"])
+
 # CSS to inject contained in a string
 hide_table_row_index = """
             <style>
