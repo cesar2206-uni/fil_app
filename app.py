@@ -72,7 +72,24 @@ suavizar = st.sidebar.checkbox('Suavizar la curva de escorrentia')
 if suavizar:
     tck = interpolate.splrep(fil_data["Time (min)"] , fil_data["q_es (l/s)"] , s=0)
     fil_data["q_es (l/s)"] = interpolate.splev(fil_data["Time (min)"], tck, der=0)
-    
+
+cotas = st.sidebar.checkbox('Añadir Cotas de la Poza')
+
+if cotas:
+    cota_fondo = st.sidebar.number_input(
+    "Nivel de fondo de la poza (m)",
+    min_value = 0.0,
+    value = 4000.0,
+    step = 1.0
+    )
+
+    cota_max_operacion = st.sidebar.number_input(
+    "Nivel máximo de operación (m)",
+    min_value = 0.0,
+    value = 4000.0,
+    step = 1.0
+    )
+
 ## Geometria de la poza
 st.sidebar.markdown("# Geometría de la Poza")
 b = st.sidebar.number_input(
