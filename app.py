@@ -297,17 +297,21 @@ if cotas:
                     "Volumen máximo almacenado de la poza (m3)",
                     "Tiempo de funcionamiento al máximo de la bomba 1 (h)",
                     "Tiempo de funcionamiento al máximo de la bomba 2 (h)",
-                    # "Volumen de filtraciones (m3)"
+                    "Cota de fondo (m.s.n.m)",
+                    "Altura del agua (m)",
+                    "Nivel Máximo de Operación (m.s.n.m)",
+                    "Nivel Alcanzado durante el Evento (m.s.n.m)"
                 ],
                 "Resultado": [
-                    f"{round(max(fil_data['q_entrada (l/s)']) * 0.001, 2):.2f}",
-                    #"{:.2f}".format(round(max(fil_data['q_entrada (l/s)']) * 0.001, 2)),
+                    "{:.2f}".format(round(max(fil_data["q_entrada (l/s)"]) * 0.001, 2)),
                     f"{round(V_dis, 2):.2f}",
                     f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
                     f"{round((cierre_bomba - inicio_bomba_extra) / 60, 1):.1f}",
-                    # cierre_bomba * q_filt* 60 / 1000
+                    f"{round(cota_fondo, 1):.1f}",
+                    f"{round(max(fil_data['Tirante (m)']), 1):.1f}",
+                    f"{round(cota_max_operacion, 1):.1f}",
+                    f"{round(max(fil_data['Tirante (m)']) + cota_fondo, 1):.1f}"
                 ]
-                    
             }
         ) 
     else:
