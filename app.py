@@ -306,10 +306,9 @@ if cotas:
                     f"{round((cierre_bomba - inicio_bomba) / 60, 1):.1f}",
                     f"{round((cierre_bomba - inicio_bomba_extra) / 60, 1):.1f}",
                     # cierre_bomba * q_filt* 60 / 1000
-                ]
-                    
+                ]        
             }
-        ) 
+        )
     else:
         resultados = pd.DataFrame(
             {
